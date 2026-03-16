@@ -33,12 +33,16 @@ Danach reicht ein einfaches `git clone https://github.com/LP16Goated4Real/TeamPl
 ---
 ### <ins>How To</ins>
 #### **Konfiguration**
-Öffne die Datei `config.yaml` mit Notepad oder einem ähnlichem Editor und gib deine TeamPlus-Logindaten ein (Speichern nicht vergessen!). Der Spitzname wird am Ende der Zusage-Nachricht automatisch hinzugefügt. 
- **Beispiel folgt:**
+Öffne die Datei `config.yaml` mit Notepad oder einem ähnlichem Editor und gib deine TeamPlus-Logindaten ein (Speichern nicht vergessen!). Der Spitzname wird am Ende der Zusage-Nachricht automatisch hinzugefügt. **Beispiel folgt:**
 <img width="788" height="444" alt="config" src="https://github.com/user-attachments/assets/0bd7d3dd-c6eb-4800-8fdd-82a086241328" />
+
+<br>
 
 #### **Sprüche konfigurieren**
 Um neue Sprüche hinzuzufügen, gehe in den **src**-Ordner und öffne die Datei `sprueche\.py`. Die neuen Sprüche müssen dasselbe Format wie die bereits existierenden haben.
+
+<br>
+
 #### **Windows Task Scheduler**
 Damit das Skript wöchentlich ausgeführt wird, ist der Windows Task Scheduler nötig. 
 1. Gehe dafür in die Windows Suchleiste und suche nach **Task Scheduler**.
@@ -58,6 +62,8 @@ Damit das Skript wöchentlich ausgeführt wird, ist der Windows Task Scheduler n
 > [!IMPORTANT]
 > Das Skript verarbeitet nur bereits in TeamPlus eingetragene Events, und nur Events, die in derselbe Woche stattfinden.
 **Beispiel:** Läuft das Skript am Mittwoch, werden nur Events bis Sonntag Mitternacht berücksichtigt.
+
+<br>
 
 #### **Manuell starten**
 Um das Skript unabhängig vom Zeitpunkt zu starten, rechtsclicke in der heruntergeladenen ZIP-Datei auf `auto_training_zusage.bat` und wähle **als Administrator ausführen**.
