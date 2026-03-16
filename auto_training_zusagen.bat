@@ -10,6 +10,7 @@ IF NOT EXIST "%LOG_FILE%" (
   echo ===================== > "%LOG_FILE%"
   echo Log Datei wurde erstellt! >> "%LOG_FILE%"
   echo ===================== >> "%LOG_FILE%"
+  echo. >> "%LOG_FILE%"
 )
 
 python --version >nul 2>&1
@@ -32,11 +33,9 @@ IF NOT EXIST "%VENV_DIR%\Scripts\python.exe" (
 CALL "%VENV_DIR%\Scripts\activate.bat"
 
 IF EXIST "requirements.txt" (
-  echo Installiere/aktualisiere Pakete aus requirements.txt... >> "%LOG_FILE%"
   "%VENV_DIR%\Scripts\python.exe" -m pip install --upgrade -r requirements.txt
 )
 
-echo Starte zusage_bot.py >> "%LOG_FILE%"
 python "%PROJECT_DIR%src\zusage_bot.py"
 
 ENDLOCAL

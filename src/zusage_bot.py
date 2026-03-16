@@ -200,16 +200,6 @@ PARTICIPATION_SIGNATURE = [
     "Je moet altijd zorgen dat je één doelpunt meer scoort als de tegenstander."
 ]
 
-script_dir = Path(__file__).resolve().parent
-log_path = script_dir / "Log" / "bot.log"
-config_path = script_dir / "config.yaml"
-
-with open (config_path)as f:
-  config = yaml.safe_load(f)
-EMAIL = config["user"]["email"]
-PASSWORD = config["user"]["passwort"]
-NAME = config["user"]["spitzname"]
-
 now = datetime.now()
 time_range = 7 - now.weekday()
 
@@ -219,11 +209,26 @@ event_status = {
   "Declined / Absent": "unsicher"
 }
 
+src_dir = Path(__file__).resolve().parent
+log_path = src_dir.parent / "Log" / "bot.log"
+config_path = src_dir.parent / "config.yaml"
+
 logging.basicConfig(
   filename=log_path,
   level=logging.INFO,
   format="%(asctime)s - %(levelname)s - %(message)s"
 )
+
+try:
+  with open (config_path)as f:
+    config = yaml.safe_load(f)
+  EMAIL = config["user"]["email"]
+  PASSWORD = config["user"]["passwort"]
+  NAME = config["user"]["spitzname"]
+except Exception as e:
+  logging.error(f"Fehler: {e}")
+  logging.error(traceback.format_exc())
+
 try:
   with sync_playwright() as p:
     logging.info("Startet auto Zusage Bot...")
