@@ -4,7 +4,7 @@ SETLOCAL
 SET PROJECT_DIR=%~dp0
 CD /D "%PROJECT_DIR%"
 
-SET LOG_FILE=%PROJECT_DIR%\Log\bot.log
+SET LOG_FILE=%PROJECT_DIR%Log\bot.log
 
 IF NOT EXIST "%LOG_FILE%" (
   echo ===================== > "%LOG_FILE%"
@@ -37,6 +37,6 @@ IF EXIST "requirements.txt" (
 )
 
 echo Starte zusage_bot.py >> "%LOG_FILE%"
-python zusage_bot.py
+python "%PROJECT_DIR%src\zusage_bot.py"
 
 ENDLOCAL
