@@ -30,12 +30,18 @@ logging.basicConfig(
 try:
   with open (config_path)as f:
     config = yaml.safe_load(f)
-  EMAIL = config["user"]["email"]
-  PASSWORD = config["user"]["passwort"]
-  NAME = config["user"]["spitzname"]
+  user_info = {
+    "EMAIL": config["user"]["email"],
+    "PASSWORD": config["user"]["passwort"],
+    "NAME": config["user"]["spitzname"]
+  }
+  missing_variables = [k for k, v in user_info.items() if not v]
+  if missing_variables:
+    raise ValueError(f"Fehlende Werte in der config.yaml Datei: {' ,'.join(missing_variables)}")
 except Exception as e:
   logging.error(f"Fehler: {e}")
   logging.error(traceback.format_exc())
+  raise
 
 try:
   with sync_playwright() as p:
@@ -50,8 +56,8 @@ try:
     except:
       pass
 
-    page.fill("input[type=email]", EMAIL)
-    page.fill("input[type=password]", PASSWORD)
+    page.fill("input[type=email]", user_info["EMAIL"])
+    page.fill("input[type=password]", user_info["PASSWORD"])
     page.click("button[type=submit]")
     time.sleep(3)
     
@@ -89,7 +95,7 @@ try:
           time.sleep(0.5)
           
           spruch = random.choice(PARTICIPATION_SIGNATURE)
-          lp_spruch =  f"\u201C{spruch}\u201D - {NAME}"
+          lp_spruch =  f"\u201C{spruch}\u201D - {user_info["NAME"]}"
           page.fill("input[type=text]", lp_spruch, timeout=2000)
           page.click("button.submit-participation")
           logging.info(fr"Spruch des Tages: {lp_spruch}")
@@ -102,8 +108,12 @@ try:
         logging.warning(f"{event_profile}: Mehr als ein Zusage Knopf gefunden")
         
     logging.info("Beendet auto Zusage Bot...")
-    with open (log_path, "a") as f:
-      f.write("\n")
+    try:
+      with open (log_path, "a") as f:
+        f.write("\n")
+    except FileNotFoundError:
+      logging.error("bot.log Datei wurde nicht gefunden")
+      print("Fehler: bot.log Datei wurde nicht gefunden")
     browser.close()
     
 except Exception as e:

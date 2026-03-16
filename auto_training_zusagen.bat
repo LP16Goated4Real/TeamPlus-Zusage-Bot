@@ -36,6 +36,6 @@ IF EXIST "requirements.txt" (
   "%VENV_DIR%\Scripts\python.exe" -m pip install --upgrade -r requirements.txt
 )
 
-python "%PROJECT_DIR%src\zusage_bot.py"
+"%VENV_DIR%\Scripts\python.exe" -m src.zusage_bot
 
 ENDLOCAL
