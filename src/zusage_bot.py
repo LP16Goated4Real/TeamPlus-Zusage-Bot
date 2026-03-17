@@ -46,7 +46,7 @@ except Exception as e:
 try:
   with sync_playwright() as p:
     logging.info("Startet auto Zusage Bot...")
-    browser = p.chromium.launch(headless=False)
+    browser = p.chromium.launch(headless=True)
     page = browser.new_page()
 
     page.goto("https://www.spielerplus.de/site/login")
@@ -115,6 +115,7 @@ try:
       logging.error("bot.log Datei wurde nicht gefunden")
       print("Fehler: bot.log Datei wurde nicht gefunden")
     browser.close()
+    print("TeamPlus-Zusage-Skript erfolgreich abgeschlossen.")
     
 except Exception as e:
   logging.error("Skript abgestuerzt!")
