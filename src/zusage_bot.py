@@ -88,8 +88,7 @@ try:
         year = now.year
         day, month = map(int, event_date.split("/"))
         target_date = datetime(year, month, day)
-        if target_date - now < timedelta(days=time_range):
-          logging.info(f"{target_date} ist weniger als {time_range} Tage von heute entfernt")       
+        if target_date - now < timedelta(days=time_range):    
           confirm_button.click()
           logging.info(f"{event_profile}: Zusage automatisch gesetzt")
           time.sleep(0.5)
@@ -101,7 +100,7 @@ try:
           logging.info(fr"Spruch des Tages: {lp_spruch}")
           time.sleep(3)
         else:
-          logging.info(f"{target_date} ist mehr als {time_range} Tage von heute entfernt")
+          logging.info(f"{event_profile} findet nicht diese Woche statt -> ueberspringen")
       elif confirm_button.count() == 0:
         logging.warning(f"{event_profile}: Kein Zusage Knopf gefunden")
       elif confirm_button.count() > 1:
