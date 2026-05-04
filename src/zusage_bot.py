@@ -6,7 +6,7 @@ import logging
 import traceback
 import yaml
 from pathlib import Path
-from src.sprueche import PARTICIPATION_SIGNATURE
+from src.sprueche import FUNNY_PARTICIPATION_SIGNATURE, MOTIVATIONAL_PARTICIPATION_SIGNATURE
 
 now = datetime.now()
 time_range = 7 - now.weekday()
@@ -93,7 +93,7 @@ try:
           logging.info(f"{event_profile}: Zusage automatisch gesetzt")
           time.sleep(0.5)
           
-          spruch = random.choice(PARTICIPATION_SIGNATURE)
+          spruch = random.choice(FUNNY_PARTICIPATION_SIGNATURE)
           lp_spruch =  f"\u201C{spruch}\u201D - {user_info["NAME"]}"
           page.fill("input[type=text]", lp_spruch, timeout=2000)
           page.click("button.submit-participation")
