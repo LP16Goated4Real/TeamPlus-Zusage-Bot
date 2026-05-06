@@ -2,3 +2,7 @@ user:
   email:
   passwort:
   spitzname:
+quotes:
+  funny: true
+  team_specific: true
+  motivational: true

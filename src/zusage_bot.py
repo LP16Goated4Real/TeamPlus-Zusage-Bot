@@ -5,8 +5,25 @@ from datetime import datetime, timedelta
 import logging
 import traceback
 import yaml
+import shutil
 from pathlib import Path
-from src.sprueche import FUNNY_PARTICIPATION_SIGNATURE, MOTIVATIONAL_PARTICIPATION_SIGNATURE
+
+def update_sprueche(path, jam):
+  try:
+    with open (path, "w", encoding="utf-8") as f:
+      yaml.dump(jam, f, allow_unicode=True)
+      return True, None
+  except Exception as e:
+    return False, e
+    
+def reset_sprueche(src_dir):
+  base_file = src_dir / "sprueche.yaml"
+  dest_file = src_dir / "quotes_available.yaml"
+  try:
+    shutil.copy2(base_file, dest_file)
+    return True, None
+  except Exception as e:
+    return False, e
 
 now = datetime.now()
 time_range = 7 - now.weekday()
@@ -20,6 +37,7 @@ event_status = {
 src_dir = Path(__file__).resolve().parent
 log_path = src_dir.parent / "Log" / "bot.log"
 config_path = src_dir.parent / "config.yaml"
+quotes_path = src_dir / "quotes_available.yaml"
 
 logging.basicConfig(
   filename=log_path,
@@ -35,9 +53,18 @@ try:
     "PASSWORD": config["user"]["passwort"],
     "NAME": config["user"]["spitzname"]
   }
-  missing_variables = [k for k, v in user_info.items() if not v]
-  if missing_variables:
-    raise ValueError(f"Fehlende Werte in der config.yaml Datei: {' ,'.join(missing_variables)}")
+  missing_user_variables = [k for k, v in user_info.items() if not v]
+  if missing_user_variables:
+    raise ValueError(f"Fehlende Werte in der config.yaml Datei: {' ,'.join(missing_user_variables)}")
+  enabled_quote_categories = [k for k, v in config["quotes"].items() if v]
+  if not enabled_quote_categories:
+    raise ValueError("Mindestens eine der quotes in der config.yaml muss auf 'true' gesetzt sein.")
+  with open (quotes_path, encoding="utf-8") as f:
+    quotes = yaml.safe_load(f)
+    if not quotes:
+      reset_sprueche(src_dir)
+      quotes = yaml.safe_load(f)
+      
 except Exception as e:
   logging.error(f"Fehler: {e}")
   logging.error(traceback.format_exc())
@@ -46,6 +73,17 @@ except Exception as e:
 try:
   with sync_playwright() as p:
     logging.info("Startet auto Zusage Bot...")
+    possible_quotes = []
+    if quotes: # quotes not empty
+      for category, items in quotes.items():
+        if category in enabled_quote_categories and items: # List not empty
+          for q in items:
+            possible_quotes.append((category, q))
+    if not possible_quotes:
+      success, error = reset_sprueche(src_dir)
+      if not success:
+        logging.error(f"Fehler: {error}")
+        raise error
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
 
@@ -93,7 +131,16 @@ try:
           logging.info(f"{event_profile}: Zusage automatisch gesetzt")
           time.sleep(0.5)
           
-          spruch = random.choice(FUNNY_PARTICIPATION_SIGNATURE)
+          if not possible_quotes:
+            success, error = reset_sprueche(src_dir)
+            if not success:
+              logging.error(f"Fehler: {error}")
+              raise error
+              
+          choice = random.choice(possible_quotes) 
+          cate , spruch = choice
+          possible_quotes.remove(choice)
+          quotes[cate].remove(spruch)
           lp_spruch =  f"\u201C{spruch}\u201D - {user_info["NAME"]}"
           page.fill("input[type=text]", lp_spruch, timeout=2000)
           page.click("button.submit-participation")
@@ -105,16 +152,18 @@ try:
         logging.warning(f"{event_profile}: Kein Zusage Knopf gefunden")
       elif confirm_button.count() > 1:
         logging.warning(f"{event_profile}: Mehr als ein Zusage Knopf gefunden")
-        
+    
+    success, error = update_sprueche(quotes_path, quotes)
+    if not success:
+      logging.error(f"Fehler: {error}")
+      
     logging.info("Beendet auto Zusage Bot...")
     try:
       with open (log_path, "a") as f:
         f.write("\n")
     except FileNotFoundError:
-      logging.error("bot.log Datei wurde nicht gefunden")
-      print("Fehler: bot.log Datei wurde nicht gefunden")
+      print("bot.log Datei wurde nicht gefunden")
     browser.close()
-    print("TeamPlus-Zusage-Skript erfolgreich abgeschlossen.")
     
 except Exception as e:
   logging.error("Skript abgestuerzt!")
