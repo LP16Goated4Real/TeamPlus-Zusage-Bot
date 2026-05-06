@@ -35,11 +35,11 @@ Danach reicht ein einfaches `git clone https://github.com/LP16Goated4Real/TeamPl
 #### **Konfiguration**
 Öffne die Datei `config.yaml` mit Notepad oder einem ähnlichem Editor und gib deine TeamPlus-Logindaten ein (Speichern nicht vergessen!). Der Spitzname wird am Ende der Zusage-Nachricht automatisch hinzugefügt. **Beispiel folgt:**\
 <img width="788" height="444" alt="config" src="https://github.com/user-attachments/assets/0bd7d3dd-c6eb-4800-8fdd-82a086241328" />
-
+Unter quotes können Kategorien für die Zitate ausgewählt werden. Standardmäßig sind alle aktiviert. Zum Deaktivieren, das **'true'** vor der jeweiligen Kategorie mit **'false'** ersetzen.
 <br>
 
 #### **Sprüche konfigurieren**
-Um neue Sprüche hinzuzufügen, gehe in den **src**-Ordner und öffne die Datei `sprueche\.py`. Die neuen Sprüche müssen dasselbe Format wie die bereits existierenden haben.
+Um neue Sprüche hinzuzufügen, gehe in den **src**-Ordner und öffne die Datei `sprueche.yaml`. Die neuen Sprüche müssen demselben Format wie die bereits existierenden folgen.
 
 <br>
 
@@ -60,8 +60,8 @@ Damit das Skript wöchentlich ausgeführt wird, ist der Windows Task Scheduler n
    - **Run task as soon as possible after a scheduled start is missed** auswählen
    - **Stop the task if it runs longer than:** auf die kleinstmögliche Zeit stellen.
 > [!IMPORTANT]
-> Das Skript verarbeitet nur bereits in TeamPlus eingetragene Events, und nur Events, die in derselbe Woche stattfinden.
-**Beispiel:** Läuft das Skript am Mittwoch, werden nur Events bis Sonntag Mitternacht berücksichtigt.
+> Das Skript verarbeitet nur bereits in TeamPlus eingetragene Events, und ausschließlich solche, die in derselben Woche stattfinden, in der das Skript ausgeführt wird.
+**Bedeutet:** Egal ob das Skript an einem Montag/Dienstag/Mittwoch/usw. läuft, werden nur Events bis Sonntag Mitternacht derselben Woche berücksichtigt.
 
 <br>
 
